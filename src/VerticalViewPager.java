@@ -2151,21 +2151,20 @@ public class VerticalViewPager extends ViewGroup {
                 
                 needsInvalidate |= mTopEdge.draw(canvas);
             }
-        	if (!mBottomEdge.isFinished()) {
-        		// TODO: fix me!
-                final int height = getHeight();
+        	if (!mBottomEdge.isFinished())
+			{
+				final int restoreCount = canvas.save();
+				final int height = getHeight();
                 final int width = getWidth() - getPaddingLeft() - getPaddingRight();
-                		
-//                canvas.rotate(90);
-//                canvas.rotate(180);
-//                canvas.translate(-getPaddingTop(), -(mLastOffset + 1) * width);
-//                canvas.translate(-(mLastOffset + 1) * height, -getPaddingRight());
-                
+				//kinda copy-pasted from ScrollView.java
+				//don't know why it works, but it does ;-)
+				canvas.translate(-width + getPaddingLeft(), getScrollY() + height);
+                canvas.rotate(180, width, 0);
                 mBottomEdge.setSize(width, height);
-//                mBottomEdge.setSize(height, width);
-                
+
                 needsInvalidate |= mBottomEdge.draw(canvas);
-//                canvas.restoreToCount(restoreCount);
+
+                canvas.restoreToCount(restoreCount);
             }
         } else {
         	mTopEdge.finish();
